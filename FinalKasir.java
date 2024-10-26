@@ -14,7 +14,6 @@ public class FinalKasir {
     static double mieGoreng = 10000;
     static double mieGorengSosis = 13000;
     static double mieKuah = 12000;
-    
     static double totalSemuaTransaksi = 0;
     
     public static void main(String[] args) {
@@ -40,16 +39,13 @@ public class FinalKasir {
                     System.out.println("Keluar dari program. Terima kasih!");
                     break;
                 default:
-                    System.out.println("Pilihan tidak valid.");
-                    
-            }
+                    System.out.println("Pilihan tidak valid.");}
         } while (pilihMenu != 4);
-        sc.close();
-    }        
+        sc.close();}        
     
     public static void kasir(Scanner sc) {
         double totalBiaya=0, grandTotal=0, diskon, totalAkhir, uangDibayar, kembalian;
-        int pilihMenu, kartuMember;
+        int pilihMenu;
         
         do {
             System.out.println("\n-------- Menu kasir --------");
@@ -78,8 +74,7 @@ public class FinalKasir {
                         totalBiaya = porsiNasGor*nasiGorengSosis;
                     } else {
                         System.out.println("Pilihan tidak ada.");
-                        continue;
-                    }
+                        continue;}
                     break;
                 case 2:
                     System.out.println("------- Cap Cay -------");
@@ -98,8 +93,7 @@ public class FinalKasir {
                     } else if (capCay == 3) {
                         totalBiaya = porsiCapCay*capCayTamie;
                     } else {
-                        System.out.println("Pilihan tidak ada.");
-                    }
+                        System.out.println("Pilihan tidak ada.");}
                     break;
                 case 3:
                     System.out.println("-------- Mie --------");
@@ -118,12 +112,10 @@ public class FinalKasir {
                     } else if (Mie == 3) {
                         totalBiaya = porsiMie*mieKuah;
                     } else {
-                        System.out.println("pilihan tidak ada.");
-                    }
+                        System.out.println("pilihan tidak ada.");}
                     break;
                 default:
-                    System.out.println("Pilihan menu tidak valid.");
-            }
+                    System.out.println("Pilihan menu tidak valid.");}
             grandTotal += totalBiaya;
             System.out.println("Total Biaya           : Rp."+totalBiaya);
             System.out.println("Grand Total           : Rp."+grandTotal);
@@ -131,16 +123,13 @@ public class FinalKasir {
         
         System.out.println("\n======== Pembayaran ========");
         System.out.println("Grand Total           : Rp."+grandTotal);
-        System.out.print("Apakah Anda memiliki kartu member? (1: Iya, 2: Tidak): ");
-        kartuMember = sc.nextInt();
         
-        if (kartuMember == 1) {
+        if (grandTotal >= 150000) {
             System.out.println("Anda mendapat diskon 5%");
             diskon = grandTotal*0.05;
         } else {
             diskon = 0;
-            System.out.println("Anda tidak mendapat diskon.");
-        }
+            System.out.println("Anda tidak mendapat diskon.");}
         
         totalAkhir = grandTotal - diskon;
         System.out.println("Total Akhir           : Rp."+totalAkhir);
@@ -156,12 +145,10 @@ public class FinalKasir {
             kembalian = 0;
         } else {
             System.out.println("Uang yang dibayarkan kurang.");
-            return;
-        }
+            return;}
         
         totalSemuaTransaksi += totalAkhir;
-        simpanTransaksiKeCSV(grandTotal, totalAkhir, diskon, uangDibayar, kembalian);
-    }
+        simpanTransaksiKeCSV(grandTotal, totalAkhir, diskon, uangDibayar, kembalian);}
     
     public static void admin(Scanner sc) {
         int pilih;
@@ -196,14 +183,11 @@ public class FinalKasir {
                 mieKuah = sc.nextDouble();
                 break;
             default:
-                System.out.println("Pilihan tidak valid.");
-        }
-    }
+                System.out.println("Pilihan tidak valid.");}}
     
     public static void owner() {
         System.out.println("\n======== Owner ========");
-        System.out.println("Total semua transaksi penjualan : Rp."+totalSemuaTransaksi);
-    }
+        System.out.println("Total semua transaksi penjualan : Rp."+totalSemuaTransaksi);}
     
      public static void simpanTransaksiKeCSV(double grandTotal, double totalAkhir, double diskon, double uangDibayar, double kembalian) {
         try {
@@ -215,8 +199,7 @@ public class FinalKasir {
                 writer = new FileWriter(file);
                 writer.write("Grand Total\tTotal Akhir\tDiskon\tUang Dibayar\tKembalian\n");
             } else {
-                writer = new FileWriter(file, true); // Tambah ke file yang sudah ada 
-            }
+                writer = new FileWriter(file, true);}
             
             // Tulis transaksi ke file
             writer.write(grandTotal + "\t" + totalAkhir + "\t" + diskon + "\t" + uangDibayar + "\t" + kembalian + "\n");
@@ -224,6 +207,4 @@ public class FinalKasir {
             System.out.println("\nTransaksi berhasil disimpan di data_transaksi_warung.csv");
         } catch (IOException e) {
             System.out.println("Terjadi kesalahan saat menyimpan transaksi : "+e.getMessage());
-        }
-    }
-}
+        }}}
