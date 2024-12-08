@@ -1,0 +1,81 @@
+package methods;
+import java.util.Scanner;
+public class KasirMethod {
+    static int HitungBiaya(int h, int j){
+        return h*j;
+    }
+    static void urutkan(String data[]){
+        // bisa buat urutkan nama barang dan nama pelanggan
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data.length-1; j++) {
+                if(data[j].compareToIgnoreCase(data[j+1])>0){
+                    String t=data[j];
+                    data[j]=data[j+1];
+                    data[j+1]=t;
+                }
+            }           
+        }
+        System.out.println("Daftar Barang");
+        for (int i = 0; i < data.length; i++) {
+            System.out.println((i+1)+". "+data[i]+" ");            
+        }
+    }
+    static void urutkan(String brg[], int hrg[]){
+        //untuk menampilkan nama barang dan harga, ketika memanggil ada 2 parameter
+        for (int i = 0; i < brg.length; i++) {
+            for (int j = 0; j < brg.length-1; j++) {
+                if(brg[j].compareToIgnoreCase(brg[j+1])>0){
+                    String temp = brg[j];
+                    brg[j] = brg[j+1];
+                    brg[j+1] = temp;
+                    int temp2 = hrg[j];
+                    hrg[j] = hrg[j+1];
+                    hrg[j+1] = temp2;
+                }
+            }
+        }
+        System.out.println("Hasil Pengurutan Nama Barang dan Harga");
+        for (int i = 0; i < brg.length; i++) {
+            System.out.println((i+1)+". "+brg[i]+" ["+hrg[i]+"]");
+        }
+    }
+    static void urutkan(int data[]){
+        
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int pilih=0;
+        String brg[]={"Tas","Sepatu","Jaket","Topi","Sandal"};
+        int hrg[]={100000,150000,200000,20000,50000};
+        String plg[]={"Nayli","Atun","Givan","Reva","Fathia","Mirza"};
+        
+        do{
+            System.out.println("\nAplikasi Kasir");
+            System.out.println("1. Hitung Biaya");
+            System.out.println("2. Urutkan Nama Barang");
+            System.out.println("3. Urutkan Nama Pelanggan");
+            System.out.println("4. Exit");
+            System.out.print("Pilih = ");
+            pilih=sc.nextInt();
+            switch(pilih){
+                case 1:
+                    int harga, jumlah;
+                    System.out.print("Harga = ");
+                    harga=sc.nextInt();
+                    System.out.print("Jumlah = ");
+                    jumlah=sc.nextInt();
+                    int biaya=HitungBiaya(harga,jumlah);
+                    System.out.println("Biaya : "+biaya);
+                    break;
+                case 2:
+                    urutkan(brg, hrg);                                                          
+                    break;
+                case 3:
+                    urutkan(plg);
+                    break;
+                case 4:
+                    System.out.println("Thank You :)");
+            }
+        }while(pilih!=4);
+    }
+}
