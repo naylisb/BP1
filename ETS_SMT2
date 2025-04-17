@@ -1,0 +1,203 @@
+package projectets_2;
+import java.util.Scanner;
+
+// Kelas induk Fokus
+class Fokus {
+    protected int durasi; // Durasi fokus dalam menit
+    protected String status; // Status sesi fokus
+    
+    public Fokus(int durasi) {
+        this.durasi = durasi;
+        this.status = "Belum selesai";
+    }
+    
+    public int getDurasi() {
+        return durasi;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+    
+    public void mulai() {
+        status = "Sedang berlangsung";
+    }
+    
+    public void selesai() {
+        status = "Selesai";
+    }
+        
+    public void akhiri() {
+        if (status.equals("Sedang berlangsung")) {
+            status = "Selesai";
+        } else {
+            System.out.println("Sesi fokus selesai.");
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return "Fokus ("+durasi+" menit) - Status: "+status;
+    }
+}
+
+// Subclass Pomodoro
+class Pomodoro extends Fokus {
+    public Pomodoro(int durasi) {
+        super(durasi); // Durasi default untuk pomodoro
+    }
+    
+    @Override
+    public String toString() {
+        return "Pomodoro ("+durasi+" menit) - Status:"+status;
+    }
+}
+
+// Subclass Bekerja
+class Stopwatch extends Fokus {
+    public Stopwatch() {
+        super(0); // Durasi 0, akan terus berjalan sampai dihentikan pengguna
+    }
+    
+    public void setDurasi(int durasi) {
+        this.durasi = durasi;
+    }
+    
+    private String formatWaktu(int totalMenit) {
+        int jam = totalMenit/60;
+        int menit = totalMenit%60;
+        return String.format("%02d:%02d", jam, menit);
+    }
+    
+    @Override
+    public String toString() {
+        return "Stopwatch: "+formatWaktu(durasi)+" - "+(status.equals("Sedang berlangsung")?"berlangsung" : status.toLowerCase());
+    }
+}
+
+// Class Pengguna (memiliki array Fokus)
+class Pengguna {
+    private String nama;
+    Fokus[] fokusList = new Fokus[100];
+    private int jumlahFokus = 0;
+    
+    public Pengguna(String nama) {
+        this.nama = nama;
+    }
+    
+    public void tambahFokus(Fokus fokus) {
+        if (jumlahFokus < fokusList.length) {
+            fokusList[jumlahFokus] = fokus;
+            jumlahFokus++;
+        } else {
+            System.out.println("Riwayat fokus penuh!");
+        }
+    }
+    
+    public void lihatRiwayatFokus() {
+        System.out.println("Riwayat Fokus "+nama+":");
+        for (int i = 0; i < jumlahFokus; i++) {
+            System.out.println((i+1)+". "+fokusList[i].toString());
+        }
+    }        
+}
+
+public class FocusApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);       
+        System.out.print("Masukkan nama pengguna: ");
+        String nama = sc.nextLine();
+        Pengguna pengguna = new Pengguna(nama);
+        
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Mulai sesi Pomodoro");
+            System.out.println("2. Mulai Stopwatch");
+            System.out.println("3. Lihat riwayat fokus");
+            System.out.println("4. Akhiri sesi fokus");
+            System.out.println("5. Keluar");           
+            System.out.print("Pilih menu: ");
+            int pilih = sc.nextInt();
+            sc.nextLine();
+            
+            switch (pilih) {
+                case 1: //Mulai sesi Pomodoro                    
+                    System.out.print("Masukkan durasi fokus (menit): ");
+                    int durasiFokus = sc.nextInt();
+                    System.out.print("Masukkan durasi istirahat pendek (menit): ");
+                    int istPendek = sc.nextInt();                    
+                    System.out.print("Masukkan durasi istirahat panjang (menit): ");
+                    int istPanjang = sc.nextInt();
+                    System.out.print("Masukkan jumlah sesi: ");
+                    int jmlhSesi = sc.nextInt();
+                    sc.nextLine();
+                    
+                    int sesiKe = 1;
+                    Pomodoro sesiGabungan = new Pomodoro(0);
+                    sesiGabungan.mulai();
+                    
+                    while (sesiKe <= jmlhSesi) {
+                        Pomodoro p = new Pomodoro(durasiFokus);
+                        p.mulai();
+                        p.selesai();
+                        sesiGabungan.durasi += durasiFokus;
+                        
+                        System.out.println("\nSesi Pomodoro ke-"+sesiKe+" dimulai ("+durasiFokus+" menit)");
+                        
+                        if (sesiKe == jmlhSesi) {
+                            System.out.println("Selamat! Kamu telah menyelesaikan semua sesi!");
+                            System.out.println("Waktunya istirahat panjang ("+istPanjang+"menit)");
+                            sesiGabungan.selesai();
+                            pengguna.tambahFokus(sesiGabungan);
+                            break;
+                        } else {
+                            System.out.println("Istirahat sebentar dulu ya ("+istPendek+" menit)");
+                            System.out.print("Lanjut ke sesi berikutnya? (ya/tidak); ");
+                            String lanjut = sc.nextLine();
+                            if (!lanjut.equalsIgnoreCase("ya")) {
+                                sesiGabungan.selesai();
+                                pengguna.tambahFokus(sesiGabungan);
+                                break;
+                            }
+                        }                                             
+                        sesiKe++;
+                    }
+                    break;
+                case 2: // Mulai Stopwatch
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.mulai();
+                    pengguna.tambahFokus(stopwatch);
+                    System.out.println("Stopwatch dimulai! Fokus sampai akhir!");
+                    break;
+                case 3: // Lihat riwayat fokus
+                    pengguna.lihatRiwayatFokus();
+                    break;
+                case 4: 
+                    System.out.println("Masukkan nomor sesi fokus yang ingin diakhiri (1-100): ");
+                    int sesiNomor = sc.nextInt();
+                    sc.nextLine();
+                    
+                    if (sesiNomor>0 && sesiNomor<=100 && pengguna.fokusList[sesiNomor-1] != null) {
+                        Fokus sesi = pengguna.fokusList[sesiNomor-1];
+                        if (sesi instanceof Stopwatch && sesi.getStatus().equals("Sedang berlangsung")) {
+                            System.out.print("Masukkan durasi fokus yang telah dilakukan (menit): ");
+                            int durasiAkhir = sc.nextInt();
+                            sc.nextLine();
+                            ((Stopwatch) sesi).setDurasi(durasiAkhir);
+                        }
+                        sesi.akhiri();
+                        System.out.println("Sesi fokus "+sesiNomor+" telah berakhir.");
+                    } else {
+                        System.out.println("Sesi fokus tidak valid.");
+                    }
+                    break;
+                case 5: // Lihat sesi fokus
+                    System.out.println("Terima kasih, "+nama+"!");
+                    sc.close();
+                    return;                   
+                default:
+                    System.out.println("Pilihan tidak valid.");                   
+            }
+        }        
+    } 
+}
